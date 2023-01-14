@@ -5,6 +5,7 @@ import IMAGE from './IMAGE.png'
 import './login.css'
 import {API} from '../../service/api'
 import { DataContext } from '../../context/DataProvider';
+import{useNavigate} from 'react-router-dom';
 
 const Lbutton=styled(Button)`
     width:210px;
@@ -30,20 +31,22 @@ const Error = styled(Typography)`
 
 
 
-function Login() {
+function Login({isUserAuthenticated}) {
     const signup={
         name:'',
         username:'',
         password:''
     }
+
     const loginval={
-        
+
     }
     const[account,setaccount]=useState('login')
     const[sign, setsign]=useState(signup)
     const[error,seterror] = useState('')
     const [login,setLogin]=useState(loginval)
     const {setAccout}=useContext(DataContext)
+    const navigate=useNavigate();
 
 
     const toggleSignup=()=>{
@@ -82,6 +85,8 @@ function Login() {
                 sessionStorage.setItem('accessToken',`Bearer ${response.data.accessToken}`)
                 sessionStorage.setItem('refreshToken',`Bearer ${response.data.refreshToken}`)
                 setaccount({username:response.data.username, name:response.data.name})
+                isUserAuthenticated(true);
+                navigate('/');
             }else{
                 console.log("Problem")
                 seterror("Something  wrong")
